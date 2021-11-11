@@ -12,8 +12,8 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: yet-another-axie-discordbot
-  IMAGE_ID: docker.pkg.github.com/${{ github.repository }}/skoohii_store
+  IMAGE_NAME: yaadb
+  IMAGE_ID: docker.pkg.github.com/${{ github.repository }}/yaadb
 
 jobs:
   # Push image to GitHub Packages.
