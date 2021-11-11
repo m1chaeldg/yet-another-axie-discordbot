@@ -6,8 +6,9 @@ COPY . .
 RUN npm run build
 
 
-FROM node:alpine
+#FROM node:alpine
 #FROM gcr.io/distroless/nodejs:16
+FROM node:16
 
 WORKDIR /app
 COPY --from=build /app /app
