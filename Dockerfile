@@ -6,7 +6,9 @@ COPY . .
 RUN npm run build
 
 
-FROM node:alpine
+#FROM node:alpine
+FROM gcr.io/distroless/nodejs
+
 COPY --from=build /app/dist /
 
 ENV ISKO_SPREADSHEET_ID $ISKO_SPREADSHEET_ID
