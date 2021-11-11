@@ -18,4 +18,5 @@ ENV ISKO_SPREADSHEET_ID $ISKO_SPREADSHEET_ID
 ENV GOOGLE_EMAIL $GOOGLE_EMAIL
 ENV GOOGLE_PRIVATE_KEY $GOOGLE_PRIVATE_KEY
 
-CMD [ "dist/index.js" ]
+# CMD [ "dist/index.js" ]
+CMD ["node" , "dist/index.js"] 
