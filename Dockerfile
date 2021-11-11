@@ -7,7 +7,7 @@ RUN npm run build
 
 
 #FROM node:alpine
-FROM gcr.io/distroless/nodejs
+FROM gcr.io/distroless/nodejs:16
 
 COPY --from=build /app/dist /
 
@@ -15,4 +15,4 @@ ENV ISKO_SPREADSHEET_ID $ISKO_SPREADSHEET_ID
 ENV GOOGLE_EMAIL $GOOGLE_EMAIL
 ENV GOOGLE_PRIVATE_KEY $GOOGLE_PRIVATE_KEY
 
-CMD [ "node", "index.js" ]
+CMD [ "index.js" ]
