@@ -8,8 +8,8 @@ export class DataService {
 
     constructor() {
         this.config = {
-            client_email: process.env.ISKO_CLIENT_EMAIL || '',
-            private_key: process.env.ISKO_PRIVATE_KEY || '',
+            client_email: process.env.GOOGLE_EMAIL || '',
+            private_key: (process.env.GOOGLE_PRIVATE_KEY || '').split('\\n').join('\n'),
             spreadsheetId: process.env.ISKO_SPREADSHEET_ID || '',
         }
         if (!this.config.client_email || !this.config.private_key || !this.config.spreadsheetId) {

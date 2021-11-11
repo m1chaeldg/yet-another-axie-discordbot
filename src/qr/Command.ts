@@ -1,5 +1,5 @@
 import { Client, Message, MessageEmbed } from "discord.js";
-import { generateQR, getRawMessage, submitSignature } from "./axieApi";
+import { generateQR, getIskoInfo, getRawMessage, submitSignature } from "./axieApi";
 import { DataService } from "./dataService";
 import { LazyCache } from "./lazy-cache";
 import { Content, DiscordAccount, Representative, ScholarAccount } from "../types";
@@ -22,19 +22,21 @@ export class Command {
 
         const stat = ['!ping',
             '!pong',
-            '!status',
             '!alive',
             '!awake',
             '!up'].join('\n');
 
         const help: { [key: string]: string } = {
             '!qr': 'Generate a QR code of the current requestor or author',
-            '!qrof': 'Generate a QR code for the given discord tag or scholar name',
-            '!iskonames': 'list the current scholar names',
+            '!qrOf': 'Generate a QR code of the given discord tag or scholar name',
+            '!iskoNames': 'list the current scholar names',
             '!refreshCreds': 'Refresh the credentials',
             '!help': 'Display this message',
 
             '!ty\n!thanks': 'Thanks the bot',
+
+            '!profile\n!status': 'Get the slp info and mmr of the current requestor or author',
+            '!profileOf\n!statusOf': 'Get the slp info and mmr of the given discord tag or scholar name',
         }
         help[stat] = 'Display the current status of the bot';
         const helpString = Object.keys(help).map(k => `${k}\n - ${help[k]}`).join('\n');
@@ -181,6 +183,50 @@ export class Command {
         return Object.values(this.discordWhitelistAccounts).find(c => c.discordId === discordId);
     }
 
+    public async handleStatusRequest(message: Message, content: Content): Promise<void> {
+        const requestor = this.getIskoNameByDiscordId(message.author.id);
+        if (!requestor) {
+            await message.reply('no permission');
+            await message.react('❌');
+            return;
+        }
 
+        const qrOf = this.getQrOf(message, content);
+        const targetAccount = this.getIskoNameByDiscordId(qrOf);
+        if (targetAccount && this.scholars.hasOwnProperty(targetAccount.name)) {
+            const isko = this.scholars[targetAccount.name];
+
+            await message.react('👍');
+            const info = await this.cache.get('profile_' + isko.name, async () => {
+                return await getIskoInfo(isko.address);
+            });
+
+            if (!info) {
+                message.reply('Please try again. Axie Infinity API have a problem');
+                return;
+            }
+
+            const embed = new MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle(isko.name)
+                .addField('Profile', info.profile)
+                .addField('Battle Logs', info.battleLog)
+                .addField('MMR', info.mmr.toString())
+                .addField('Rank', info.rank.toString())
+                .addField('Claimable SLP', info.claimable.toString())
+                .addField('Lock SLP', info.unclaimable.toString())
+                .addField('Total', info.total.toString())
+                .addField('Claimable Date(NJ)', info.claimable_date_NY)
+                .addField('Claimable Date(PH)', info.claimable_date_PHT)
+                .setTimestamp()
+                .setFooter('Axie Gaming PH Bot');
+
+            await message.channel.send({
+                embeds: [embed]
+            });
+        } else {
+            await message.reply('Discord ID or Name is not map. Check if properly map with that ID or Name');
+        }
+    }
 }
 

@@ -89,3 +89,54 @@ export const generateQR = (accessToken: string, fileNameID: string, iskoName: st
 
     return fname;
 };
+
+export const getIskoInfo = async (address: string) => {
+    try {
+
+        var mmrUrl = 'https://game-api.skymavis.com/game-api/last-season-leaderboard?client_id={address}&offset=0&=limit=0'.replace('{address}', address.replace('ronin:', '0x'));
+        let slpUrl = 'https://game-api.skymavis.com/game-api/clients/{address}/items/1'.replace('{address}', address.replace('ronin:', '0x'));
+
+        const res = await Promise.all([
+            axios.get(slpUrl),
+            axios.get(mmrUrl)]);
+
+
+
+        let { data: slpData } = res[0];
+        let { data: mmrData } = res[1];
+        if (slpData.success && mmrData.success) {
+
+            let total = slpData.total || 0;
+            let claimable = slpData.blockchain_related.balance || 0;
+            let unix_timestamp = slpData.last_claimed_item_at || 0;
+
+            let date = new Date(unix_timestamp * 1000);
+            date.setDate(date.getDate() + 14);
+
+            const convertTZ = (tzString: string) => {
+                return date.toLocaleString("en-US", { timeZone: tzString });
+            }
+
+            let est = convertTZ('America/New_York');
+            let pht = convertTZ('Asia/Manila');
+
+            return {
+                total: total,
+                claimable: claimable,
+                unclaimable: total - claimable,
+                claimable_date_NY: est,
+                claimable_date_PHT: pht,
+                profile: `https://marketplace.axieinfinity.com/profile/${address.replace('0x', 'ronin:')}/axie`,
+                battleLog: `https://axie.zone/profile?ron_addr=${address.replace('ronin:', '0x')}`,
+                mmr: mmrData.items[11].elo,
+                rank: mmrData.items[11].rank
+            };
+        } else {
+            return false;
+        }
+
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};

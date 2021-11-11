@@ -35,7 +35,6 @@ export const onMessage: OnMessageHandler = async (client, message: Message) => {
             break;
         case 'pong':
         case 'ping':
-        case 'status':
             await message.channel.send('online');
             break;
         case 'up':
@@ -57,6 +56,12 @@ export const onMessage: OnMessageHandler = async (client, message: Message) => {
         case 'thank':
         case 'ty':
             await handler.handleThanks(message, content);
+            break;
+        case 'profile':
+        case 'profileof':
+        case 'status':
+        case 'statusof':
+            await handler.handleStatusRequest(message, content);
             break;
     }
 };
