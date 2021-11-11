@@ -122,7 +122,9 @@ export class Command {
                     files: [fName]
                 });
 
-                unlink(fName, d => { });
+                setTimeout(() => {
+                    unlink(fName, d => { });
+                }, 5 * 1000);
             }
         } else {
             await message.react('❌');

@@ -1,0 +1,12 @@
+FROM node:alpine
+WORKDIR /dist
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+ENV ISKO_SPREADSHEET_ID $ISKO_SPREADSHEET_ID
+ENV GOOGLE_EMAIL $GOOGLE_EMAIL
+ENV GOOGLE_PRIVATE_KEY $GOOGLE_PRIVATE_KEY
+
+CMD [ "node", "index.js" ]
