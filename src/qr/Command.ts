@@ -72,9 +72,15 @@ export class Command {
         }
 
         const qrOf = this.getQrOf(message, content);
-        const targetAccount = this.getIskoNameByDiscordId(qrOf);
-        if (targetAccount && this.scholars.hasOwnProperty(targetAccount.name)) {
-            const isko = this.scholars[targetAccount.name];
+        if (!qrOf || (!qrOf.discordId && !qrOf.scholarName)) {
+            await message.react('❌');
+            return;
+        }
+
+        const targetAccount = qrOf.discordId ? this.getIskoNameByDiscordId(qrOf.discordId)?.name : qrOf.scholarName;
+
+        if (targetAccount && this.scholars.hasOwnProperty(targetAccount)) {
+            const isko = this.scholars[targetAccount];
 
             if (this.managers.includes(requestor.name)) {
                 await this.sendQRCode(message, isko);
@@ -131,19 +137,39 @@ export class Command {
         }
     }
 
-    private getQrOf(message: Message, content: Content): string {
+    private getQrOf(message: Message, content: Content): {
+        discordId?: string,
+        scholarName?: string
+    } | null {
         // get first the mention user
         if (message.mentions.users.size > 0)
-            return message.mentions.users.first()?.id || '';
+            return {
+                discordId: message.mentions.users.first()?.id || '',
+            }
+
         // get from message body/content
         if (content.body) {
             const name = content.body.split(' ')[0].toLowerCase();
             const account = Object.values(this.discordWhitelistAccounts).find(v => v.name.toLowerCase() === name || v.discordId === name);
             if (account)
-                return account.discordId;
+                return {
+                    discordId: account.discordId,
+                }
+
+            else {
+                const scholar = Object.values(this.scholars).find(v => v.name.toLowerCase() === name);
+                if (scholar)
+                    return {
+                        scholarName: scholar.name
+                    }
+                else
+                    return null;
+            }
         }
         // if no qr body, use the author
-        return message.author.id;
+        return {
+            discordId: message.author.id,
+        };
     }
 
     public async handleRefreshCreds(client: Client, _message: Message | null, _content: Content | null): Promise<void> {
@@ -194,9 +220,14 @@ export class Command {
         }
 
         const qrOf = this.getQrOf(message, content);
-        const targetAccount = this.getIskoNameByDiscordId(qrOf);
-        if (targetAccount && this.scholars.hasOwnProperty(targetAccount.name)) {
-            const isko = this.scholars[targetAccount.name];
+        if (!qrOf || (!qrOf.discordId && !qrOf.scholarName)) {
+            await message.react('❌');
+            return;
+        }
+
+        const targetAccount = qrOf.discordId ? this.getIskoNameByDiscordId(qrOf.discordId)?.name : qrOf.scholarName;
+        if (targetAccount && this.scholars.hasOwnProperty(targetAccount)) {
+            const isko = this.scholars[targetAccount];
 
             await message.react('👍');
             const info = await this.cache.get('profile_' + isko.name, async () => {
