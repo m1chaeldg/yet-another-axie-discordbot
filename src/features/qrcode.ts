@@ -61,6 +61,8 @@ export const onMessage: OnMessageHandler = async (client, message: Message) => {
         case 'profileof':
         case 'status':
         case 'statusof':
+        case 'stat':
+        case 'stats':
             await handler.handleStatusRequest(message, content);
             break;
     }

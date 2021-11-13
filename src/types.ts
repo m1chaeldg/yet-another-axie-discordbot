@@ -40,12 +40,15 @@ export type DiscordAccount = {
 }
 
 export type ScholarAccount = {
-  [name: string]: {
-    name: string;
-    address: string;
-    privatekey: string;
-  };
+  [name: string]: ScholarAccountItem;
 }
+export type ScholarAccountItem = {
+  name: string;
+  address: string;
+  privatekey: string;
+  displayName: string;
+}
+
 
 export type Representative = {
   [name: string]: string[];

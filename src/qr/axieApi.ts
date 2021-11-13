@@ -126,10 +126,12 @@ export const getIskoInfo = async (address: string) => {
                 unclaimable: total - claimable,
                 claimable_date_NY: est,
                 claimable_date_PHT: pht,
+                claimable_date: date.toISOString(),
                 profile: `https://marketplace.axieinfinity.com/profile/${address.replace('0x', 'ronin:')}/axie`,
                 battleLog: `https://axie.zone/profile?ron_addr=${address.replace('ronin:', '0x')}`,
                 mmr: mmrData.items[11].elo,
-                rank: mmrData.items[11].rank
+                rank: mmrData.items[11].rank,
+                last_claimed_item_at: slpData.last_claimed_item_at || 0
             };
         } else {
             return false;

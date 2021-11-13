@@ -2,7 +2,7 @@ import { Client, Message, MessageEmbed } from "discord.js";
 import { generateQR, getIskoInfo, getRawMessage, submitSignature } from "./axieApi";
 import { DataService } from "./dataService";
 import { LazyCache } from "./lazy-cache";
-import { Content, DiscordAccount, Representative, ScholarAccount } from "../types";
+import { Content, DiscordAccount, Representative, ScholarAccount, ScholarAccountItem } from "../types";
 import { unlink } from 'fs'
 
 export class Command {
@@ -84,12 +84,15 @@ export class Command {
 
             if (this.managers.includes(requestor.name)) {
                 await this.sendQRCode(message, isko);
+                console.log(`${new Date().toISOString()} : ${requestor.name} requested QR of ${isko.displayName}`);
                 return;
             } else if (this.representative.hasOwnProperty(requestor.name) && this.representative[requestor.name].includes(isko.name)) {
                 await this.sendQRCode(message, isko);
+                console.log(`${new Date().toISOString()} : ${requestor.name} requested QR of ${isko.displayName}`);
                 return;
             } else if (requestor.name === isko.name) {
                 await this.sendQRCode(message, isko);
+                console.log(`${new Date().toISOString()} : ${requestor.name} requested QR`);
                 return;
             } else {
                 await message.reply('no permission to request qr');
@@ -101,9 +104,9 @@ export class Command {
         // no isko name found
         await message.react('❌');
     }
-    private async sendQRCode(message: Message, isko: { name: string; address: string; privatekey: string; }): Promise<void> {
+    private async sendQRCode(message: Message, isko: ScholarAccountItem): Promise<void> {
         if (isko && isko.address && isko.privatekey) {
-            console.log(`${new Date().toISOString()} : ${isko.name} requested QR`);
+            console.log(`${new Date().toISOString()} : ${isko.displayName} requested QR`);
 
             await message.react('👍');
 
@@ -121,9 +124,9 @@ export class Command {
             if (!authToken) {
                 message.reply('Please try again. Axie Infinity API have a problem');
             } else {
-                const fName = generateQR(authToken, fileNameID, isko.name);
+                const fName = generateQR(authToken, fileNameID, isko.displayName);
 
-                await message.author.send(`Here is the new QR Code of ${isko.name}: `);
+                await message.author.send(`Here is the new QR Code of ${isko.displayName}: `);
                 message.author.send({
                     files: [fName]
                 });
@@ -157,13 +160,13 @@ export class Command {
                 }
 
             else {
-                const scholar = Object.values(this.scholars).find(v => v.name.toLowerCase() === name);
-                if (scholar)
+                if (this.scholars.hasOwnProperty(name))
                     return {
-                        scholarName: scholar.name
+                        scholarName: name
                     }
                 else
                     return null;
+
             }
         }
         // if no qr body, use the author
@@ -197,7 +200,7 @@ export class Command {
         const embed = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('Scholars')
-            .addField('Names', Object.keys(this.scholars).join('\n'))
+            .addField('Names', Object.values(this.scholars).map(c => c.displayName).join('\n'))
             .setTimestamp()
             .setFooter('Axie Gaming PH Bot');
 
@@ -239,14 +242,31 @@ export class Command {
                 return;
             }
 
+            const yesterdayData = await this.cache.get('yesterday_' + isko.name, async () => {
+                return await this.dataService.getYesterdaySLP(isko.address);
+            });
+
             const embed = new MessageEmbed()
                 .setColor('#0099ff')
-                .setTitle(isko.name)
+                .setTitle(isko.displayName)
                 .addField('Profile', info.profile)
                 .addField('Battle Logs', info.battleLog)
                 .addField('MMR', info.mmr.toString())
-                .addField('Rank', info.rank.toString())
-                .addField('Claimable SLP', info.claimable.toString())
+                .addField('Rank', info.rank.toString());
+
+            if (yesterdayData) {
+                const { dailySlp, totalSlp, lastClaimedItemAt } = yesterdayData as any;
+
+                if (lastClaimedItemAt !== info.last_claimed_item_at) {
+                    embed.addField("SLP Today", info.unclaimable.toString())
+                } else {
+                    const today = +info.total - +totalSlp;
+                    embed.addField('SLP Yesterday', dailySlp.toString())
+                        .addField("SLP Today", today.toString());
+                }
+            }
+
+            embed.addField('Claimable SLP', info.claimable.toString())
                 .addField('Lock SLP', info.unclaimable.toString())
                 .addField('Total', info.total.toString())
                 .addField('Claimable Date(NJ)', info.claimable_date_NY)
