@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ChangeME_yetanotherdicordbot",
+  "private_key_id": "ChangeME",
+  "private_key": "ChangeME",
+  "client_email": "ChangeME_discord-qr-bot@yetanotherdicordbot.iam.gserviceaccount.com",
+  "client_id": "ChangeME",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ChangeME_discord-qr-bot%40yetanotherdicordbot.iam.gserviceaccount.com"
+}
