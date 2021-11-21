@@ -7,8 +7,9 @@ import { unlink } from 'fs'
 
 export class Command {
 
-    private managers = ['Shim', 'Mike', 'Ryan', 'Kevin', 'Wessa', 'ser0wl'];
+    private managers = ['Shim', 'Mike', 'Ryan', 'Kevin', 'Wessa', 'ser0wl'].join(',').toLowerCase().split(',');
     private cache: LazyCache = new LazyCache();
+    private replyEmoji = ['👍', '👌', '💪', '😜', '🤪', '😀', '😁', '😆', '😅', '😂', '🤣'];
 
 
     public discordWhitelistAccounts: DiscordAccount = {};
@@ -108,7 +109,7 @@ export class Command {
         if (isko && isko.address && isko.privatekey) {
             console.log(`${new Date().toISOString()} : ${isko.displayName} requested QR`);
 
-            await message.react('👍');
+            await message.react(this.getRandomReactEmoji());
 
             const fileNameID = `QRCode_${message.author.id}_${Math.floor(Math.random() * 1000000)}`;
 
@@ -232,7 +233,7 @@ export class Command {
         if (targetAccount && this.scholars.hasOwnProperty(targetAccount)) {
             const isko = this.scholars[targetAccount];
 
-            await message.react('👍');
+            await message.react(this.getRandomReactEmoji());
             const info = await this.cache.get('profile_' + isko.name, async () => {
                 return await getIskoInfo(isko.address);
             });
@@ -280,6 +281,10 @@ export class Command {
         } else {
             await message.reply('Discord ID or Name is not map. Check if properly map with that ID or Name');
         }
+    }
+
+    public getRandomReactEmoji() {
+        return this.replyEmoji[Math.floor(Math.random() * this.replyEmoji.length)];
     }
 }
 

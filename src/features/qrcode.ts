@@ -40,7 +40,7 @@ export const onMessage: OnMessageHandler = async (client, message: Message) => {
         case 'up':
         case 'alive':
         case 'awake':
-            await message.react('🙂');
+            await message.react(handler.getRandomReactEmoji());
             break;
         case 'qr':
         case 'qrof':
