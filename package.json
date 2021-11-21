@@ -16,7 +16,7 @@
     "axios": "^0.24.0",
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
-    "easyqrcodejs-nodejs": "^4.4.0",
+    "easyqrcodejs-nodejs": "github:m1chaeldg/EasyQRCodeJS-NodeJS",
     "googleapis": "^91.0.0",
     "web3": "^1.6.1"
   },
@@ -35,6 +35,10 @@
     "node": ">=16.0"
   },
   "resolutions": {
+    "canvas": "2.8.0",
+    "jsdom": "18.1.0",
+    "svgo": "2.8.0",
+    "string-width": "5.0.1",
     "strip-ansi": "7.0.1",
     "json-schema": "0.4.0"
   }
