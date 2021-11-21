@@ -9,7 +9,7 @@
     "dev": "ts-node-dev src/index.ts",
     "build": "tsc",
     "lint": "eslint src",
-    "preinstall": "npx npm-force-resolutions"
+    "force-resolution": "npx npm-force-resolutions"
   },
   "dependencies": {
     "@google-cloud/firestore": "^4.15.1",
