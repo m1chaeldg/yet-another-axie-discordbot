@@ -9,7 +9,8 @@
     "dev": "ts-node-dev src/index.ts",
     "build": "tsc",
     "lint": "eslint src",
-    "force-resolution": "npx npm-force-resolutions"
+    "force-resolution": "npx npm-force-resolutions",
+    "clean": "npx rimraf ./**/node_modules"
   },
   "dependencies": {
     "@google-cloud/firestore": "^4.15.1",
@@ -35,11 +36,6 @@
     "node": ">=16.0"
   },
   "resolutions": {
-    "canvas": "2.8.0",
-    "jsdom": "18.1.0",
-    "svgo": "2.8.0",
-    "string-width": "5.0.1",
-    "strip-ansi": "7.0.1",
     "json-schema": "0.4.0"
   }
 }
