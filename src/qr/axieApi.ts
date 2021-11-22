@@ -6,11 +6,21 @@ const web3 = new Web3();
 // ronin or etherscan
 const mainnet = 'ronin';
 
+const reqConfig = {
+    headers: {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+        "content-type": "application/json",
+        "accept-language": "en-US,en;q=0.9",
+        "origin": "https://marketplace.axieinfinity.com",
+        "authority": "graphql-gateway.axieinfinity.com"
+    }
+};
+
 export const fetchData = async (
     postData: { [key: string]: any }
 ): Promise<any> => {
     const url = 'https://graphql-gateway.axieinfinity.com/graphql';
-    const { data, status } = await axios.post(url, postData);
+    const { data, status } = await axios.post(url, postData, reqConfig);
 
     if (status < 200 && status >= 300) {
         throw Error('Axie Infinity API have a problem');
@@ -97,8 +107,8 @@ export const getIskoInfo = async (address: string) => {
         let slpUrl = 'https://game-api.skymavis.com/game-api/clients/{address}/items/1'.replace('{address}', address.replace('ronin:', '0x'));
 
         const res = await Promise.all([
-            axios.get(slpUrl),
-            axios.get(mmrUrl)]);
+            axios.get(slpUrl, reqConfig),
+            axios.get(mmrUrl, reqConfig)]);
 
 
 
