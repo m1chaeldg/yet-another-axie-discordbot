@@ -47,6 +47,7 @@ export type ScholarAccountItem = {
   address: string;
   privatekey: string;
   displayName: string;
+  team: string;
 }
 
 

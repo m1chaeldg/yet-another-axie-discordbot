@@ -39,7 +39,7 @@ export class DataService {
             throw new Error('Missing config');
         }
     }
-    ISKO_Accounts = 'Isko!A2:C100'
+    ISKO_Accounts = 'Isko!A2:D100'
     ISKO_DiscordAccount = 'DiscordAccount!A2:B100'
     ISKO_Representative = 'Representative!A2:B100'
 
@@ -121,7 +121,8 @@ export class DataService {
                             name: name,
                             displayName: row[0] || '',
                             address: address,
-                            privatekey: privatekey
+                            privatekey: privatekey,
+                            team: (row[3] || '').toLowerCase()
                         };
                 }
             });
