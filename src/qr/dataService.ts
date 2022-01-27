@@ -92,8 +92,8 @@ export class DataService {
         if (values)
             values.forEach(row => {
                 if (row && row.length > 1) {
-                    const representative = (row[0] || '').toLowerCase();
-                    const targetName = (row[1] || '').toLowerCase();
+                    const representative = (row[0] || '').toLowerCase().trim();
+                    const targetName = (row[1] || '').toLowerCase().trim();
                     if (representative && targetName) {
                         if (!accounts[representative])
                             accounts[representative] = [];
@@ -113,9 +113,9 @@ export class DataService {
         if (values)
             values.forEach(row => {
                 if (row && row.length > 0) {
-                    const name = (row[0] || '').toLowerCase();
-                    const address = (row[1] || '').toLowerCase();
-                    const privatekey = (row[2] || '').toLowerCase();
+                    const name = (row[0] || '').toLowerCase().trim();
+                    const address = (row[1] || '').toLowerCase().trim();
+                    const privatekey = (row[2] || '').toLowerCase().trim();
                     if (name && address && privatekey)
                         scholars[name] = {
                             name: name,
