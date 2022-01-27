@@ -38,6 +38,7 @@
   "resolutions": {
     "json-schema": "0.4.0",
     "follow-redirects": ">=1.14.7",
-    "node-forge": ">=1.0.0"
+    "node-forge": ">=1.0.0",
+    "node-fetch": ">=2.6.7"
   }
 }
