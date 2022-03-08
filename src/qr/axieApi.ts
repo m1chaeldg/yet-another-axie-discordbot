@@ -8,11 +8,20 @@ const mainnet = 'ronin';
 
 const reqConfig = {
     headers: {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
-        "content-type": "application/json",
-        "accept-language": "en-US,en;q=0.9",
+        "user-agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',
         "origin": "https://marketplace.axieinfinity.com",
-        "authority": "graphql-gateway.axieinfinity.com"
+        "authority": "graphql-gateway.axieinfinity.com",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "content-type": "application/json",
+        "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "Referer": "https://marketplace.axieinfinity.com/",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
     }
 };
 
@@ -20,6 +29,7 @@ export const fetchData = async (
     postData: { [key: string]: any }
 ): Promise<any> => {
     const url = 'https://graphql-gateway.axieinfinity.com/graphql';
+
     const { data, status } = await axios.post(url, postData, reqConfig);
 
     if (status < 200 && status >= 300) {

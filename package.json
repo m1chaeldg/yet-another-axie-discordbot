@@ -17,7 +17,7 @@
     "axios": "^0.24.0",
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
-    "easyqrcodejs-nodejs": "github:m1chaeldg/EasyQRCodeJS-NodeJS",
+    "easyqrcodejs-nodejs": "^4.4.3",
     "googleapis": "^91.0.0",
     "web3": "^1.6.1"
   },
@@ -38,7 +38,6 @@
   "resolutions": {
     "json-schema": "0.4.0",
     "follow-redirects": ">=1.14.7",
-    "node-forge": ">=1.0.0",
-    "node-fetch": ">=2.6.7"
+    "node-forge": ">=1.0.0"
   }
 }
